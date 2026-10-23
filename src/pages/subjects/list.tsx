@@ -45,7 +45,7 @@ const SubjectsList = () => {
 
       {
         id: 'department',
-        accessorKey: 'department',
+        accessorFn: (row: any) => row.departments?.name ?? '',
         size: 150,
         header: () => <p className='column-title'>Department</p>,
         cell: ({ getValue }) => <Badge variant={'secondary'}>{getValue<string>()}</Badge>
@@ -56,7 +56,7 @@ const SubjectsList = () => {
         accessorKey: 'description',
         size: 300,
         header: () => <p className='column-title'>Description</p>,
-        cell: ({ getValue }) => <span className='truncate line-clamp-2'></span>,
+        cell: ({ getValue }) => <span className='truncate line-clamp-2'>{getValue<string>()}</span>,
       }
 
     ], []),

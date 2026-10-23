@@ -14,9 +14,9 @@ import routerProvider, {
   DocumentTitleHandler,
 } from "@refinedev/react-router";
 import { dataProvider } from "./providers/data";
-import { Login } from "./pages/login";
-import { Register } from "./pages/register";
-import { ForgotPassword } from "./pages/forgot-password";
+// import { Login } from "./pages/login";
+// import { Register } from "./pages/register";
+// import { ForgotPassword } from "./pages/forgot-password";
 import { ErrorComponent } from "./components/refine-ui/layout/error-component";
 import { Layout } from "./components/refine-ui/layout/layout";
 import { Header } from "./components/refine-ui/layout/header";
