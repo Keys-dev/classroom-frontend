@@ -203,7 +203,7 @@ const buildHttpError = async (response: Response): Promise<HttpError> => {
 
 const options: CreateDataProviderOptions = {
   getList: {
-    getEndpoint: ({ resource }) => `/api/${resource}`,
+    getEndpoint: ({ resource }) => `${resource}`,
 
     buildQueryParams: async ({ resource, pagination, filters }) => {
       const params: Record<string, string | number> = {};
@@ -265,7 +265,7 @@ const options: CreateDataProviderOptions = {
   },
 
   create: {
-    getEndpoint: ({ resource }) => `/api/${resource}`,
+    getEndpoint: ({ resource }) => `${resource}`,
 
     buildBodyParams: async ({ variables }) => variables,
 
@@ -276,7 +276,7 @@ const options: CreateDataProviderOptions = {
   },
 
   getOne: {
-    getEndpoint: ({ resource, id }) => `/api/${resource}/${id}`,
+    getEndpoint: ({ resource, id }) => `${resource}/${id}`,
 
     mapResponse: async (response) => {
       const json: GetOneResponse = await response.json();
