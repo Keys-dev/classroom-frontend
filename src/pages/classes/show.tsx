@@ -6,14 +6,12 @@ import { useMemo } from "react";
 import { useParams } from "react-router";
 
 import { DataTable } from "@/components/refine-ui/data-table/data-table";
-import { ShowButton } from "@/components/refine-ui/buttons/show";
 import {
   ShowView,
   ShowViewHeader,
 } from "@/components/refine-ui/views/show-view";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { bannerPhoto } from "@/lib/cloudinary";
@@ -59,21 +57,6 @@ const ClassesShow = () => {
               </span>
             </div>
           </div>
-        ),
-      },
-      {
-        id: "details",
-        size: 140,
-        header: () => <p className="column-title">Details</p>,
-        cell: ({ row }) => (
-          <ShowButton
-            resource="users"
-            recordItemId={row.original.id}
-            variant="outline"
-            size="sm"
-          >
-            View
-          </ShowButton>
         ),
       },
     ],
@@ -219,21 +202,6 @@ const ClassesShow = () => {
         </div>
 
         <Separator />
-
-        {/* Join Class Section */}
-        <div className="join">
-          <h2>🎓 Join Class</h2>
-
-          <ol>
-            <li>Ask your teacher for the invite code.</li>
-            <li>Click on &quot;Join Class&quot; button.</li>
-            <li>Paste the code and click &quot;Join&quot;</li>
-          </ol>
-        </div>
-
-        <Button size="lg" className="w-full">
-          Join Class
-        </Button>
       </Card>
 
       <Card className="hover:shadow-md transition-shadow">
@@ -241,7 +209,11 @@ const ClassesShow = () => {
           <CardTitle>Enrolled Students</CardTitle>
         </CardHeader>
         <CardContent>
-          <DataTable table={studentsTable} paginationVariant="simple" />
+          {studentsTable.refineCore.tableQuery.isError ? (
+            <p className="state-message">Failed to load students.</p>
+          ) : (
+            <DataTable table={studentsTable} paginationVariant="simple" />
+          )}
         </CardContent>
       </Card>
     </ShowView>
