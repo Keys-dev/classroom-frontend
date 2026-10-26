@@ -3,18 +3,27 @@ import { ListView } from '@/components/refine-ui/views/list-view'
 import { useMemo, useState } from 'react'
 import { Search } from "lucide-react"
 import { Select, SelectContent, SelectTrigger, SelectValue, SelectItem } from '@/components/ui/select'
-import { DEPARTMENT_OPTIONS, DEPARTMENTS } from '@/constants'
 import { CreateButton } from '@/components/refine-ui/buttons/create'
+import { EditButton } from '@/components/refine-ui/buttons/edit'
+import { DeleteButton } from '@/components/refine-ui/buttons/delete'
 import { DataTable } from '@/components/refine-ui/data-table/data-table'
 import { useTable } from '@refinedev/react-table'
-import { Subject } from '@/types'
+import { useList } from '@refinedev/core'
+import { Subject, Department } from '@/types'
 import { ColumnDef } from '@tanstack/react-table'
 import { Badge } from '@/components/ui/badge'
 
 const SubjectsList = () => {
-  const  [searchQuery, setSearchQuery] = useState('');
-  const [selectedDepartment, setselectedDepartment] = useState('all')
-  
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedDepartment, setSelectedDepartment] = useState('all')
+
+  // Fetch departments for filter dropdown
+  const { query: departmentsQuery } = useList<Department>({
+    resource: 'departments',
+    pagination: { pageSize: 100 },
+  });
+  const departments = departmentsQuery.data?.data || [];
+
   const departmentFilters = selectedDepartment === 'all' ? [] : [
     {field: 'department', operator: 'eq' as const, value: selectedDepartment}
   ];
@@ -57,6 +66,31 @@ const SubjectsList = () => {
         size: 300,
         header: () => <p className='column-title'>Description</p>,
         cell: ({ getValue }) => <span className='truncate line-clamp-2'>{getValue<string>()}</span>,
+      },
+
+      {
+        id: 'actions',
+        size: 140,
+        header: () => <p className='column-title'>Actions</p>,
+        cell: ({ row }) => (
+          <div className='flex gap-2'>
+            <EditButton
+              resource="subjects"
+              recordItemId={row.original.id}
+              variant="outline"
+              size="sm"
+            >
+              Edit
+            </EditButton>
+            <DeleteButton
+              resource="subjects"
+              recordItemId={row.original.id}
+              size="sm"
+            >
+              Archive
+            </DeleteButton>
+          </div>
+        ),
       }
 
     ], []),
@@ -80,7 +114,7 @@ const SubjectsList = () => {
         <Breadcrumb />
         <h1 className="page-title">Subjects</h1>
         <div className='intro-row'>
-          <p>Quick assess to essential metrics and management tools</p>
+          <p>Quick access to essential metrics and management tools</p>
           <div className='actions-row'>
             <div className='search-field'>
               <Search className='search-icon'/>
@@ -97,7 +131,7 @@ const SubjectsList = () => {
             <div className='flex gap-2 w-full sm:w-auto'>
               <Select 
                 value={selectedDepartment} 
-                onValueChange={setselectedDepartment}
+                onValueChange={setSelectedDepartment}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Filter by department"/>
@@ -107,9 +141,9 @@ const SubjectsList = () => {
                   <SelectItem value="all">
                     All Departments
                   </SelectItem>
-                  {DEPARTMENT_OPTIONS.map((department) => (
-                    <SelectItem key={department.value} value={department.value}>
-                      {department.label}
+                  {departments.map((dept) => (
+                    <SelectItem key={dept.id} value={dept.name}>
+                      {dept.name}
                     </SelectItem>
                   ))}
                 </SelectContent>

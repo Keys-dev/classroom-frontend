@@ -106,6 +106,39 @@ const options: CreateDataProviderOptions = {
       return json.data ?? {};
     },
   },
+
+  update: {
+    getEndpoint: ({ resource, id }) => `api/${resource}/${id}`,
+
+    buildBodyParams: async ({ variables }) => variables,
+
+    mapResponse: async (response) => {
+      const json: CreateResponse = await response.json();
+      return json.data ?? {};
+    },
+  },
+
+  deleteOne: {
+    getEndpoint: ({ resource, id }) => `api/${resource}/${id}/archive`,
+
+    mapResponse: async (response) => {
+      const json: CreateResponse = await response.json();
+      return json.data ?? {};
+    },
+  },
+
+  getMany: {
+    getEndpoint: ({ resource }) => `api/${resource}`,
+
+    buildQueryParams: async ({ ids }) => {
+      return { ids: ids.join(",") };
+    },
+
+    mapResponse: async (response) => {
+      const json: ListResponse = await response.json();
+      return (json.data ?? []) as any;
+    },
+  },
 };
 
 const { dataProvider } = createDataProvider(BACKEND_BASE_URL, options);
