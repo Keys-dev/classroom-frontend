@@ -25,6 +25,7 @@ type DataTablePaginationProps = {
   pageSize: number;
   setPageSize: (size: number) => void;
   total?: number;
+  variant?: "default" | "simple";
 };
 
 export function DataTablePagination({
@@ -34,7 +35,9 @@ export function DataTablePagination({
   pageSize,
   setPageSize,
   total,
+  variant = "default",
 }: DataTablePaginationProps) {
+  const isSimple = variant === "simple";
   const pageSizeOptions = useMemo(() => {
     const baseOptions = [10, 20, 30, 40, 50];
     const optionsSet = new Set(baseOptions);
@@ -66,26 +69,28 @@ export function DataTablePagination({
           "whitespace-nowrap"
         )}
       >
-        {typeof total === "number" ? `${total} row(s)` : null}
+        {!isSimple && typeof total === "number" ? `${total} row(s)` : null}
       </div>
       <div className={cn("flex", "items-center", "flex-wrap", "gap-2")}>
         <div className={cn("flex", "items-center", "gap-2")}>
           <span className={cn("text-sm", "font-medium")}>Rows per page</span>
-          <Select
-            value={`${pageSize}`}
-            onValueChange={(v) => setPageSize(Number(v))}
-          >
-            <SelectTrigger className={cn("h-8", "w-[70px]")}>
-              <SelectValue placeholder={pageSize} />
-            </SelectTrigger>
-            <SelectContent side="top">
-              {pageSizeOptions.map((size) => (
-                <SelectItem key={size} value={`${size}`}>
-                  {size}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          {!isSimple && (
+            <Select
+              value={`${pageSize}`}
+              onValueChange={(v) => setPageSize(Number(v))}
+            >
+              <SelectTrigger className={cn("h-8", "w-[70px]")}>
+                <SelectValue placeholder={pageSize} />
+              </SelectTrigger>
+              <SelectContent side="top">
+                {pageSizeOptions.map((size) => (
+                  <SelectItem key={size} value={`${size}`}>
+                    {size}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          )}
         </div>
         <div className={cn("flex", "items-center", "flex-wrap", "gap-2")}>
           <div
