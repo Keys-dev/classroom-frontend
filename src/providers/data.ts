@@ -24,9 +24,17 @@ const buildHttpError = async (response: Response): Promise<HttpError> => {
     }
 }
 
+const RESOURCE_ENDPOINT_MAP: Record<string, string> = {
+  "my-classes": "classes/my",
+  "enrolled-classes": "classes/enrolled",
+};
+
 const options: CreateDataProviderOptions = {
   getList: {
-    getEndpoint: ({ resource }) => `api/${resource}`,
+    getEndpoint: ({ resource }) => {
+      const mapped = RESOURCE_ENDPOINT_MAP[resource];
+      return mapped ? `api/${mapped}` : `api/${resource}`;
+    },
 
     buildQueryParams: async ({ resource, pagination, filters }) => {
       const params: Record<string, string | number> = {};
@@ -66,6 +74,10 @@ const options: CreateDataProviderOptions = {
           if (field === "name") params.search = value;
           if (field === "subject") params.subject = value;
           if (field === "teacher") params.teacher = value;
+        }
+
+        if (resource === "my-classes" || resource === "enrolled-classes") {
+          if (field === "name") params.search = value;
         }
       });
 
