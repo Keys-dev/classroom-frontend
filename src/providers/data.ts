@@ -4,8 +4,9 @@ import { CreateResponse, GetOneResponse, ListResponse } from "@/types";
 import { BACKEND_BASE_URL } from "@/constants";
 import { HttpError } from "@refinedev/core";
 
-if (!BACKEND_BASE_URL) 
-  throw new Error('BACKEND_BASE_URL is not configured. Please set VITE_BACKEND_BASE_URL in your .env file.');
+if (!BACKEND_BASE_URL) {
+  console.warn('WARNING: BACKEND_BASE_URL is not configured. API calls will fail.');
+}
 
 const buildHttpError = async (response: Response): Promise<HttpError> => {
     let message = 'Request failed.';
