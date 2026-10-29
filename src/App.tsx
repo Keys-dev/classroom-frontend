@@ -23,6 +23,8 @@ import Dashboard from "./pages/dashboard";
 import SignInPage from "./pages/auth/sign-in";
 import SignUpPage from "./pages/auth/sign-up";
 import ForgotPasswordPage from "./pages/auth/forgot-password";
+import CheckEmailPage from "./pages/auth/check-email";
+import UpdatePasswordPage from "./pages/auth/update-password";
 import TeacherDashboard from "./pages/teacher/dashboard";
 import TeacherClassesList from "./pages/teacher/classes/list";
 import TeacherClassesCreate from "./pages/teacher/classes/create";
@@ -129,6 +131,8 @@ function App() {
                 <Route path="/login" element={<SignInPage />} />
                 <Route path="/register" element={<SignUpPage />} />
                 <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+                <Route path="/check-email" element={<CheckEmailPage />} />
+                <Route path="/update-password" element={<UpdatePasswordPage />} />
 
                 {/* Protected pages — with layout */}
                 <Route
