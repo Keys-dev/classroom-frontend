@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { ArrowLeft } from "lucide-react";
 
-import { useForgotPassword, useRefineOptions, useLink } from "@refinedev/core";
+import { useForgotPassword, useLink, useNotification } from "@refinedev/core";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -20,17 +20,35 @@ export const ForgotPasswordForm = () => {
   const [email, setEmail] = useState("");
 
   const Link = useLink();
-
-  const { title } = useRefineOptions();
+  const { open } = useNotification();
 
   const { mutate: forgotPassword } = useForgotPassword();
 
   const handleForgotPassword = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    forgotPassword({
-      email,
-    });
+    forgotPassword(
+      {
+        email,
+      },
+      {
+        onSuccess: (data) => {
+          if (data.success) {
+            open?.({
+              type: "success",
+              message: "Password reset email sent",
+              description: "Check your inbox for the reset link.",
+            });
+          } else {
+            open?.({
+              type: "error",
+              message: data.error?.message ?? "Failed to send reset email",
+              description: "Please check your email address and try again.",
+            });
+          }
+        },
+      }
+    );
   };
 
   return (
@@ -45,16 +63,6 @@ export const ForgotPasswordForm = () => {
         "min-h-svh"
       )}
     >
-      <div className={cn("flex", "items-center", "justify-center", "gap-2")}>
-        {title.icon && (
-          <div
-            className={cn("text-foreground", "[&>svg]:w-12", "[&>svg]:h-12")}
-          >
-            {title.icon}
-          </div>
-        )}
-      </div>
-
       <Card className={cn("sm:w-[456px]", "p-12", "mt-6")}>
         <CardHeader className={cn("px-0")}>
           <CardTitle
@@ -70,7 +78,7 @@ export const ForgotPasswordForm = () => {
           <CardDescription
             className={cn("text-muted-foreground", "font-medium")}
           >
-            Enter your email to change your password.
+            Enter your email and we'll send you a link to reset your password.
           </CardDescription>
         </CardHeader>
 
@@ -82,7 +90,7 @@ export const ForgotPasswordForm = () => {
                 <Input
                   id="email"
                   type="email"
-                  placeholder=""
+                  placeholder="you@example.com"
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -117,7 +125,7 @@ export const ForgotPasswordForm = () => {
               )}
             >
               <ArrowLeft className={cn("w-4", "h-4")} />
-              <span>Back</span>
+              <span>Back to sign in</span>
             </Link>
           </div>
         </CardContent>
